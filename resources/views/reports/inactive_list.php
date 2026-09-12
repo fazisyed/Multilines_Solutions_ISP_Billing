@@ -1,0 +1,374 @@
+<?php include __DIR__ . '/../partials/header.php'; ?>
+
+<style>
+    .report-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f1f5f9;
+        margin-top: 20px;
+        overflow: hidden;
+    }
+
+    .report-header {
+        padding: 25px 30px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fff;
+    }
+
+    .report-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .report-title i {
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 8px;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-action-main {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid transparent;
+    }
+
+    .btn-print {
+        background: #fff;
+        border-color: #cbd5e1;
+        color: #475569;
+    }
+
+    .btn-print:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #1e293b;
+    }
+
+    .btn-disable {
+        background: #ef4444;
+        color: #fff;
+    }
+
+    .btn-disable:hover {
+        background: #dc2626;
+        transform: translateY(-1px);
+    }
+
+    .table-wrapper {
+        padding: 25px 30px;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .custom-table th {
+        background: #f8fafc;
+        padding: 12px 15px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        font-weight: 600;
+        border-bottom: 2px solid #e2e8f0;
+        text-align: left;
+    }
+
+    .custom-table td {
+        padding: 16px 15px;
+        font-size: 0.875rem;
+        color: #334155;
+        border-bottom: 1px solid #f1f5f9;
+        background: #fff;
+    }
+
+    .custom-table tr:hover td {
+        background: #f8fafc;
+    }
+
+    .col-id {
+        font-family: 'Inter', monospace;
+        background: #f1f5f9;
+        padding: 4px 8px !important;
+        border-radius: 4px;
+        color: #475569 !important;
+        font-size: 0.8rem !important;
+        font-weight: 500;
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .user-sub {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 2px;
+    }
+
+    .badge {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .badge.expired {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge.inactive {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+    .badge.disabled {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-view {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        background: #eff6ff;
+        color: #2563eb;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-view:hover {
+        background: #dbeafe;
+    }
+
+    @media print {
+
+        .btn-group,
+        .btn-view {
+            display: none !important;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="report-card">
+        <div class="report-header">
+            <div class="report-title">
+                <i class="fas fa-user-slash"></i>
+                Inactive / Expired List
+            </div>
+            <div class="btn-group">
+                <button onclick="processAutoDisable()" class="btn-action-main btn-disable">
+                    <i class="fas fa-bolt"></i> Run Auto-Disable
+                </button>
+                <a href="<?= url('setup/column-preview?table=inactive_list') ?>" class="btn-action-main btn-print"
+                    style="text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-columns"></i> Columns
+                </a>
+                <div class="column-selector-wrapper no-print" style="display:none;">
+                    <button type="button" class="btn-action-main btn-print" id="colPickerBtn">
+                        <i class="fas fa-columns"></i> Columns
+                    </button>
+                    <div class="column-picker-dropdown" id="colPickerDropdown" style="left: auto; right: 0;">
+                        <label><input type="checkbox" class="col-toggle" data-col="0" checked> ID</label>
+                        <label><input type="checkbox" class="col-toggle" data-col="1" checked> Customer</label>
+                        <label><input type="checkbox" class="col-toggle" data-col="2" checked> Mobile</label>
+                        <label><input type="checkbox" class="col-toggle" data-col="3" checked> Status</label>
+                        <label><input type="checkbox" class="col-toggle" data-col="4" checked> Expiry Date</label>
+                        <label><input type="checkbox" class="col-toggle" data-col="5" checked> Manual?</label>
+                    </div>
+                </div>
+                <button onclick="window.print()" class="btn-action-main btn-print">
+                    <i class="fas fa-print"></i> Print List
+                </button>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <div style="overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <?php foreach ($tableColumns as $col): ?>
+                                <th><?= htmlspecialchars($col['label']) ?></th>
+                            <?php endforeach; ?>
+                            <th class="no-print" width="10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($customers)): ?>
+                            <?php foreach ($customers as $c):
+                                $isExpired = $c['expire_date'] && strtotime($c['expire_date']) < time();
+                                $statusClass = $c['status'];
+                                if ($isExpired && $c['status'] == 'active')
+                                    $statusClass = 'expired';
+                                ?>
+                                <tr>
+                                    <?php foreach ($tableColumns as $col): ?>
+                                        <?php if ($col['key'] === 'id'): ?>
+                                            <td><span
+                                                    class="col-id"><?= htmlspecialchars($c['prefix_code'] ?? '') ?><?= $c['id'] ?></span>
+                                            </td>
+                                        <?php elseif ($col['key'] === 'customer_info'): ?>
+                                            <td>
+                                                <div class="user-info">
+                                                    <span class="user-name"><?= htmlspecialchars($c['full_name']) ?></span>
+                                                    <span
+                                                        class="user-sub"><?= htmlspecialchars($c['pppoe_name'] ?? 'No PPPoE') ?></span>
+                                                </div>
+                                            </td>
+                                        <?php elseif ($col['key'] === 'mobile_no'): ?>
+                                            <td><?= htmlspecialchars($c['mobile_no']) ?></td>
+                                        <?php elseif ($col['key'] === 'status'): ?>
+                                            <td>
+                                                <span class="badge <?= $statusClass ?>">
+                                                    <?= ($statusClass == 'expired') ? 'Expired' : ucfirst($c['status']) ?>
+                                                </span>
+                                            </td>
+                                        <?php elseif ($col['key'] === 'expire_date'): ?>
+                                            <td style="<?= $isExpired ? 'color: #ef4444; font-weight: 600;' : '' ?>">
+                                                <?= $c['expire_date'] ? date('d/m/Y', strtotime($c['expire_date'])) : 'N/A' ?>
+                                            </td>
+                                        <?php elseif ($col['key'] === 'manual_auto_disable'): ?>
+                                            <td>
+                                                <?= ($c['auto_disable'] == 1) ? '<span style="color: #10b981;" title="Auto-disable enabled"><i class="fas fa-robot"></i></span>' : '<span style="color: #94a3b8;" title="Manual only"><i class="fas fa-user-cog"></i></span>' ?>
+                                            </td>
+                                        <?php else: ?>
+                                            <td><?= htmlspecialchars($c[$col['key']] ?? '') ?></td>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+
+                                    <td>
+                                        <a href="<?= url('customer/show/' . $c['id']) ?>" class="btn-view">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="<?= count($tableColumns) + 1 ?>"
+                                    style="text-align: center; padding: 40px; color: #64748b;">
+                                    No inactive or expired customers found.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function processAutoDisable() {
+        if (!confirm('Are you sure you want to run the auto-disable process now? This will disable all active customers with expired dates and auto-disable enabled.')) return;
+
+        const btn = event.currentTarget;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+        fetch('<?= url('report/processAutoDisable') ?>')
+            .then(res => res.json())
+            .then(res => {
+                alert(res.message);
+                location.reload();
+            })
+            .catch(err => {
+                alert('Error processing requests.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-bolt"></i> Run Auto-Disable';
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const pickerBtn = document.getElementById('colPickerBtn');
+        const pickerDropdown = document.getElementById('colPickerDropdown');
+        const toggles = document.querySelectorAll('.col-toggle');
+        const table = document.querySelector('.custom-table');
+        const STORAGE_KEY = 'inactive_list_cols';
+
+        // Toggle dropdown
+        pickerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pickerDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            pickerDropdown.classList.remove('active');
+        });
+
+        pickerDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Load saved preferences
+        let preferences = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+        toggles.forEach(checkbox => {
+            const colIndex = checkbox.dataset.col;
+            if (preferences[colIndex] === false) {
+                checkbox.checked = false;
+                toggleColumn(colIndex, false);
+            }
+
+            checkbox.addEventListener('change', function () {
+                toggleColumn(colIndex, this.checked);
+                preferences[colIndex] = this.checked;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+            });
+        });
+
+        function toggleColumn(index, show) {
+            const rows = table.rows;
+            for (let i = 0; i < rows.length; i++) {
+                const cell = rows[i].cells[index];
+                if (cell) {
+                    if (show) {
+                        cell.classList.remove('col-hidden');
+                    } else {
+                        cell.classList.add('col-hidden');
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<?php include __DIR__ . '/../partials/footer.php'; ?>

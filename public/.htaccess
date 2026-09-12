@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Ensure the public directory is used if accessing from the root
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

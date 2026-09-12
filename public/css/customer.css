@@ -1,0 +1,132 @@
+/* Customer Form Styles */
+.form-container {
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    border: 1px solid #e2e8f0;
+    max-width: 1300px;
+    margin: 24px auto;
+}
+
+.form-header {
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+}
+
+.form-header h2 {
+    color: #1e293b;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.section-title {
+    background-color: #f8fafc;
+    padding: 10px 16px;
+    border-left: 4px solid #0066ff;
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin: 28px 0 20px 0;
+    border-radius: 0 6px 6px 0;
+    border-top: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #1e293b;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #0066ff;
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+.form-actions {
+    margin-top: 36px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 20px;
+}
+
+.btn-save {
+    background-color: #0066ff;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 4px rgba(0, 102, 255, 0.2);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-save:hover {
+    background-color: #004ecc;
+    box-shadow: 0 4px 8px rgba(0, 102, 255, 0.3);
+}
+
+.btn-cancel {
+    background-color: transparent;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+    background-color: #f1f5f9;
+}
+
+/* Specific Field Adjustments */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.readonly-field {
+    background-color: #f8fafc;
+    color: #64748b;
+}
+
+#total_amount {
+    font-weight: 700;
+    color: #0066ff;
+}

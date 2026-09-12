@@ -1,0 +1,111 @@
+:root {
+    --ms-sidebar-width: 260px;
+    --ms-primary: #0066ff;
+    --ms-bg: #f4f7fc;
+    --ms-sidebar-bg: #0f172a;
+    --ms-sidebar-text: #94a3b8;
+    --ms-sidebar-hover: #1e293b;
+    --ms-sidebar-active: #0066ff;
+}
+
+body {
+    margin: 0;
+    background-color: var(--ms-bg);
+    font-family: 'Inter', sans-serif;
+    color: #1e293b;
+}
+
+/* App Layout Wrapper */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.app-sidebar {
+    width: var(--ms-sidebar-width);
+    background-color: var(--ms-sidebar-bg);
+    color: var(--ms-sidebar-text);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-brand {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.sidebar-brand img {
+    height: 36px;
+    object-fit: contain;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 15px 10px;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.sidebar-menu li {
+    margin-bottom: 4px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    color: var(--ms-sidebar-text);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.sidebar-menu a:hover, 
+.sidebar-menu a.active {
+    background-color: var(--ms-sidebar-hover);
+    color: #ffffff;
+}
+
+.sidebar-menu a.active {
+    background-color: var(--ms-sidebar-active);
+    color: #ffffff;
+}
+
+/* Main Content Wrapper */
+.app-main {
+    flex-grow: 1;
+    margin-left: var(--ms-sidebar-width);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Header Bar inside Main */
+.app-topbar {
+    height: 70px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+}
