@@ -1,4 +1,4 @@
-# HK ISP Billing Software
+ISP Billing Software
 
 A robust, full-featured ISP Management & Billing System built with Vanilla PHP, optimized for performance and ease of use. This application handles everything from customer onboarding to monthly automated billing, report generation, and complaint management.
 
